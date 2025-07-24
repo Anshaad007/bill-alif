@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    .back-btn {
+    display: inline-block;
+    margin: 28px 0 18px 18px;
+    background: #FFF2D8;
+    color: #113946;
+    border: 1.5px solid #BCA37F;
+    border-radius: 8px;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 1.12em;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 10px 26px 10px 18px;
+    box-shadow: 0 2px 10px rgba(17,57,70,0.06);
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.back-btn:hover {
+    background: #BCA37F;
+    color: #113946;
+    border-color: #113946;
+}
+</style>
+    <title>Invoice Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <a href="main.html" class="back-btn"><span style="font-size:1.3em;vertical-align:middle;">&#8592;</span> Back to Admin Panel</a>
+    <div class="container">
+        <div class="form-section">
+            <h1>Bill Generator</h1>
+            
+
+
+            <!-- Invoice Details -->
+            <div class="form-group">
+                <h3>Invoice Details</h3>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="invoiceNumber">Invoice Number:</label>
+                        <input type="text" id="invoiceNumber" placeholder="BC3952">
+                    </div>
+                    <div class="form-field">
+                        <label for="invoiceDate">Creation Date:</label>
+                        <input type="date" id="invoiceDate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Information -->
+            <div class="form-group">
+                <h3>Student Information</h3>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="studentName">Student Name:</label>
+                        <input type="text" id="studentName" placeholder="STUDENT NAME">
+                    </div>
+                    <div class="form-field">
+                        <label for="studentClass">Class/Section:</label>
+                        <input type="text" id="studentClass" placeholder="CLASS NAME">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="studentPhone">Phone:</label>
+                        <input type="text" id="studentPhone" placeholder="PHONE NUMBER">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items Section -->
+            <div class="form-group">
+                <h3>Invoice Items</h3>
+                <div id="itemsContainer">
+                    <div class="item-row">
+                        <div class="item-field">
+                            <label>Fee Type:</label>
+                            <select class="item-description" onchange="handleFeeTypeChange(this)">
+                                <option value="">Select Fee Type</option>
+                                <option value="Term Fee">Term Fee</option>
+                                <option value="Monthly Fee">Monthly Fee</option>
+                                <option value="Book Fee">Book Fee</option>
+                                <option value="Admission Fee">Admission Fee</option>
+                                <option value="Other Fee">Other Fee</option>
+                            </select>
+                        </div>
+                        <div class="item-field period-field" style="display: none;">
+                            <label class="period-label">Period:</label>
+                            <select class="item-period">
+                                <!-- Options will be populated based on fee type -->
+                            </select>
+                        </div>
+                        <div class="item-field custom-fee-field" style="display: none;">
+                            <label>Custom Fee Description:</label>
+                            <input type="text" class="item-custom-description" placeholder="Enter custom fee description">
+                        </div>
+                        <div class="item-field">
+                            <label>Quantity:</label>
+                            <input type="number" class="item-quantity" value="1" min="0">
+                        </div>
+                        <div class="item-field">
+                            <label>Unit Price (₹):</label>
+                            <input type="number" class="item-price" placeholder="500.00" step="0.1">
+                        </div>
+                        <div class="item-field">
+                            <label>Tax (%):</label>
+                            <input type="number" class="item-tax" placeholder="18" step="0.1">
+                        </div>
+                        <button type="button" class="remove-item" onclick="removeItem(this)">Remove</button>
+                    </div>
+                </div>
+                <button type="button" id="addItem">Add Item</button>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="form-group">
+                <h3>Payment Method</h3>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="paymentMethod">Payment Method:</label>
+                        <select id="paymentMethod" onchange="handlePaymentMethodChange(this)">
+                            <option value="UPI">UPI</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Card">Card</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="paymentDetails">Payment Details:</label>
+                        <input type="text" id="paymentDetails" placeholder="Enter payment details">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="downloadPDF">Download Invoice PDF</button>
+            </div>
+        </div>
+
+        <div class="preview-section">
+            <div id="invoicePreview" class="invoice-preview">
+                <!-- Invoice preview will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
