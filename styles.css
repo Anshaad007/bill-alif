@@ -352,13 +352,15 @@ h3 {
     background: #FFF2D8;
     max-width: 600px;
     margin: 40px auto;
-    padding: 32px 32px 24px 32px;
+    padding: 40px 32px 180px 32px; /* balanced: less top, more bottom for PDF safety */
     border: 1.5px solid #d4c2a8;
     border-radius: 0;
     font-family: Arial, sans-serif;
     line-height: 1.5;
     box-shadow: 0 6px 36px rgba(17,57,70,0.10), 0 1.5px 6px rgba(188,163,127,0.07);
     position: relative;
+    overflow: visible !important; /* ensure nothing is clipped */
+    min-height: 600px; /* ensure enough space for all content */
 }
 
 .invoice-header {
@@ -555,7 +557,11 @@ table.invoice-table td {
 .payment-info {
     margin-top: 20px;
     padding-top: 20px;
+    padding-bottom: 12px;
     border-top: 1px solid #BCA37F;
+    border-bottom: 1px solid #BCA37F;
+    min-height: 40px;
+    page-break-inside: avoid;
 }
 
 .payment-info h4 {

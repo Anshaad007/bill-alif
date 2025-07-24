@@ -358,41 +358,42 @@ function formatDate(dateString) {
 
 // Download PDF
 function downloadPDF() {
-    const element = document.getElementById('invoicePreview');
-    
-    // Get student name for filename
-    const studentName = document.getElementById('studentName').value.trim();
-    const invoiceNumber = document.getElementById('invoiceNumber').value.trim();
-    
-    // Create filename with student name
-    let filename = 'ALIF ONLINE FEE RECEIPT';
-    if (studentName) {
-        // Clean student name for filename (remove special characters)
-        const cleanName = studentName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
-        filename = `${cleanName}_Fee_Receipt`;
-        
-        // Add invoice number if available
-        if (invoiceNumber) {
-            filename += `_${invoiceNumber}`;
+    // Ensure the preview is up-to-date before generating PDF
+    updateInvoicePreview();
+    // Wait a short time to ensure DOM is updated
+    setTimeout(function() {
+        const element = document.getElementById('invoicePreview');
+        // Get student name for filename
+        const studentName = document.getElementById('studentName').value.trim();
+        const invoiceNumber = document.getElementById('invoiceNumber').value.trim();
+        // Create filename with student name
+        let filename = 'ALIF ONLINE FEE RECEIPT';
+        if (studentName) {
+            // Clean student name for filename (remove special characters)
+            const cleanName = studentName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+            filename = `${cleanName}_Fee_Receipt`;
+            // Add invoice number if available
+            if (invoiceNumber) {
+                filename += `_${invoiceNumber}`;
+            }
         }
-    }
-    filename += '.pdf';
-    
-    const opt = {
-        margin: 0.5,
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 2,
-            useCORS: true,
-            letterRendering: true
-        },
-        jsPDF: { 
-            unit: 'in', 
-            format: 'a4', 
-            orientation: 'portrait' 
-        }
-    };
-    
-    html2pdf().set(opt).from(element).save();
+        filename += '.pdf';
+        const opt = {
+            margin: [0.1, 0.1, 0.1, 0.1],
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { 
+                scale: 2,
+                useCORS: true,
+                letterRendering: true,
+                windowHeight: element.scrollHeight // ensure full content is captured
+            },
+            jsPDF: { 
+                unit: 'in', 
+                format: 'a4', 
+                orientation: 'portrait' 
+            }
+        };
+        html2pdf().set(opt).from(element).save();
+    }, 100); // 100ms delay ensures DOM update
 }
