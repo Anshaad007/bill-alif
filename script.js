@@ -358,20 +358,21 @@ function formatDate(dateString) {
 
 // Download PDF
 function downloadPDF() {
+    // Ensure the preview is up-to-date before generating PDF
     updateInvoicePreview();
+    // Wait a short time to ensure DOM is updated
     setTimeout(function() {
         const element = document.getElementById('invoicePreview');
-        // Save original width
-        const originalWidth = element.style.width;
-        // Set width for PDF rendering (A4 size at 96dpi)
-        element.style.width = '794px';
-
+        // Get student name for filename
         const studentName = document.getElementById('studentName').value.trim();
         const invoiceNumber = document.getElementById('invoiceNumber').value.trim();
+        // Create filename with student name
         let filename = 'ALIF ONLINE FEE RECEIPT';
         if (studentName) {
+            // Clean student name for filename (remove special characters)
             const cleanName = studentName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
             filename = `${cleanName}_Fee_Receipt`;
+            // Add invoice number if available
             if (invoiceNumber) {
                 filename += `_${invoiceNumber}`;
             }
@@ -385,30 +386,14 @@ function downloadPDF() {
                 scale: 2,
                 useCORS: true,
                 letterRendering: true,
-                windowHeight: element.scrollHeight
+                windowHeight: element.scrollHeight // ensure full content is captured
             },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
+            jsPDF: { 
+                unit: 'in', 
+                format: 'a4', 
+                orientation: 'portrait' 
             }
         };
-        // iOS-specific workaround
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-        if (isIOS()) {
-            html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
-                var blob = pdf.output('blob');
-                var blobUrl = URL.createObjectURL(blob);
-                window.open(blobUrl, '_blank');
-            }).finally(function() {
-                element.style.width = originalWidth;
-            });
-        } else {
-            html2pdf().set(opt).from(element).save().then(function() {
-                element.style.width = originalWidth;
-            });
-        }
-    }, 100);
-}}
+        html2pdf().set(opt).from(element).save();
+    }, 100); // 100ms delay ensures DOM update
+}
